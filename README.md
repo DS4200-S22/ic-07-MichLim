@@ -11,7 +11,7 @@ The purpose of this assignment is to start learning how to use D3.js to build cu
 
 1. Background material to support this assignment is provided below in the Resources section.  
 
-1. You can find a reference for what your final webpage should look like and how it should behanve in the "reference" folder. 
+1. You can find a reference for what your final webpage should look like and how it should behave in the "reference" folder. 
 
 1. Create a GitHub Page for your repo and add the link to your GitHub Page above where you see `[insert your clickable hyperlink here]`. 
 
