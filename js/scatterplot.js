@@ -6,84 +6,90 @@ Modified: 12/08/21
 
 */
 
-// Build your scatterplot in this file 
+d3.csv("data/scatter.csv").then(function(data) {
 
-const svg2 = d3
-  .select("#csv-scatter")
-  .append("svg")
-  .attr("width", width-margin.left-margin.right)
-  .attr("height", height - margin.top - margin.bottom)
-  .attr("viewBox", [0, 0, width, height]);
-
-  d3.csv("/data/scatter.csv").then((data) => {
-
-    // Sets maxY2 to the max y value in the y-axis
-    let maxY2 = d3.max(data, function(d) { return d.score; });  
-    // Sets yScale2 from 0 to the maxY2 value previously determined.
-    let yScale2 = d3.scaleLinear()
-              .domain([0,maxY2])
-              .range([height-margin.bottom,margin.top]);
+    // Add an svg to csv-scatter div  
+    let svg3 = d3
+      .select("#csv-scatter")
+      .append("svg")
+      .attr("width", width-margin.left-margin.right)
+      .attr("height", height - margin.top - margin.bottom)
+      .attr("viewBox", [0, 0, width, height]);
   
-    // Sets maxX2 to the max x value in the x-axis
-    let maxX2 = d3.max(data, function(d) { return d.day; });
+    //Axes 
   
-    // Sets xScale1 x-axis to be based on the data1
-    let xScale2 = d3.scaleLinear()
-        .domain([0,maxX2])
-        .range([margin.left, width - margin.right]); 
+    // Find max y value to plot  
+    let maxY3 = d3.max(data, function(d) { return d.score; });
   
-    // Plot the points
-    svg2.selectAll("circle")
-      .data(data)
-      .enter()
-      .append("circle")
-          .attr("cx", (d) => xScale3(d.day))
-          .attr("cy", (d) => yScale3(d.score))
-          .attr("r", 10)
-          .attr("fill", "orange")
-          .attr("class", "SimpleScatter")
-           .on("mouseover", mouseover3) 
-           .on("mousemove", mousemove3)
-           .on("mouseleave", mouseleave3);
+    // Create y scale   
+    let yScale3 = d3.scaleLinear()
+                .domain([0,maxY3])
+                .range([height-margin.bottom,margin.top]); 
   
-        // Add x axis to svg2
-      svg2.append("g")
-        .attr("transform", `translate(0,${height - margin.bottom})`) 
-        .call(d3.axisBottom(xScale2))
-          .attr("font-size", '20px');
+    // Find max x value to plot  
+    let maxX3 = d3.max(data, function(d) { return d.day; });
   
-      // Add y axis to svg2
-      svg2.append("g")
+    // Create x scale
+    let xScale3 = d3.scaleLinear()
+                .domain([0,maxX3])
+                .range([margin.left,width-margin.right]);
+  
+    // Add y axis to webpage 
+    svg3.append("g")
        .attr("transform", `translate(${margin.left}, 0)`) 
-       .call(d3.axisLeft(yScale2))
-        .attr("font-size", '20px');
+       .call(d3.axisLeft(yScale3)) 
+       .attr("font-size", '20px'); 
   
-  });
-
-  // TOOLTIP
-
-// Creates a div for the tooltip
-const tooltip2 = d3.select("#csv-scatter") 
-    .append("div") 
-    .attr('id', "tooltip2") 
-    .style("opacity", 0) 
-    .attr("class", "tooltip");
-
-// Display name of the bar and score  
-const mouseover3 = function(event, d) {
-    tooltip2.html("Day: " + d.day + "<br> Score: " + d.score + "<br>") 
-    .style("opacity", 1);  
-}
-
-const mousemove3 = function(event, d) {
-    tooltip2.style("left", (event.x)+"px") 
-    .style("top", (event.y + yTooltipOffset) +"px"); 
-}
-
-// When the mouse leaves make the tooltip opacity 0
-const mouseleave3 = function(event, d) { 
-    tooltip2.style("opacity", 0); 
-}
-
-
-
+    // Add x axis to webpage  
+    svg3.append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`) 
+        .call(d3.axisBottom(xScale3))   
+        .attr("font-size", '20px'); 
+  
+  
+    /* 
+  
+      Tooltip Set-up  
+  
+    */
+  
+    // Add div for tooltip to webpage
+    const tooltip3 = d3.select("body") 
+                    .append("div") 
+                    .attr('id', "tooltip3") 
+                    .style("opacity", 0) 
+                    .attr("class", "tooltip"); 
+  
+    // Add values to tooltip on mouseover, make tooltip div opaque  
+    const mouseover3 = function(event, d) {
+      tooltip3.html("Day: " + d.day + "<br> Score: " + d.score + "<br>") 
+              .style("opacity", 1);  
+    }
+  
+    // Position tooltip to follow mouse 
+    const mousemove3 = function(event, d) {
+      tooltip3.style("left", (event.pageX)+"px") 
+              .style("top", (event.pageY + yTooltipOffset)+"px"); 
+    }
+  
+    // Return tooltip to transparant when mouse leaves
+    const mouseleave3 = function(event, d) { 
+      tooltip3.style("opacity", 0); 
+    }
+  
+  
+    //Points
+  
+    // Add points to the webpage, bind events needed for tooltips 
+    svg3.selectAll(".point") 
+       .data(data) 
+       .enter()  
+       .append("circle") 
+         .attr("class", "point") 
+         .attr("cx", (d) => xScale3(d.day)) 
+         .attr("cy", (d) => yScale3(d.score)) 
+         .attr("r", 10) 
+         .on("mouseover", mouseover3) 
+         .on("mousemove", mousemove3)
+         .on("mouseleave", mouseleave3);
+  }); 
